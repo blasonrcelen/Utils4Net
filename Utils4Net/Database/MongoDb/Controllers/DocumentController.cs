@@ -38,7 +38,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
         /*
          * Insert
          */
-        public async Task Insert(T model)
+        public virtual async Task Insert(T model)
         {
             if (model == null)
             {
@@ -68,7 +68,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
         /*
          * Update
          */
-        public async Task<long> Update(FilterDefinition<T> filter, UpdateDefinition<T> update)
+        public virtual async Task<long> Update(FilterDefinition<T> filter, UpdateDefinition<T> update)
         {
             if (filter == null)
             {
@@ -101,7 +101,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
             }
         }
 
-        public async Task<long> Update(string filterField, object? filterValue, UpdateDefinition<T> update)
+        public virtual async Task<long> Update(string filterField, object? filterValue, UpdateDefinition<T> update)
         {
             if (string.IsNullOrWhiteSpace(filterField))
             {
@@ -110,7 +110,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
             return await Update(Builders<T>.Filter.Eq(filterField, filterValue), update);
         }
 
-        public async Task<bool> Update(K _id, UpdateDefinition<T> update)
+        public virtual async Task<bool> Update(K _id, UpdateDefinition<T> update)
         {
             if (_id == null)
             {
@@ -122,7 +122,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
         /*
          * Delete
          */
-        public async Task<long> Delete(FilterDefinition<T> filter)
+        public virtual async Task<long> Delete(FilterDefinition<T> filter)
         {
             if (filter == null)
             {
@@ -150,7 +150,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
             }
         }
 
-        public async Task<long> Delete(string filterField, object? filterValue)
+        public virtual async Task<long> Delete(string filterField, object? filterValue)
         {
             if (string.IsNullOrWhiteSpace(filterField))
             {
@@ -159,7 +159,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
             return await Delete(Builders<T>.Filter.Eq(filterField, filterValue));
         }
 
-        public async Task<bool> Delete(K _id)
+        public virtual async Task<bool> Delete(K _id)
         {
             if (_id == null)
             {
@@ -171,7 +171,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
         /*
          * Find
          */
-        public async Task<T> FindOne(FilterDefinition<T>? filter = null, ProjectionDefinition<T>? projection = null)
+        public virtual async Task<T> FindOne(FilterDefinition<T>? filter = null, ProjectionDefinition<T>? projection = null)
         {
             filter ??= Builders<T>.Filter.Empty;
             IFindFluent<T, T> findFluent = Collection.Find(Session, filter);
@@ -184,7 +184,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
             return await findFluent.FirstOrDefaultAsync();
         }
 
-        public async Task<T> FindOne(string filterField, object? filterValue, ProjectionDefinition<T>? projection = null)
+        public virtual async Task<T> FindOne(string filterField, object? filterValue, ProjectionDefinition<T>? projection = null)
         {
             if (string.IsNullOrWhiteSpace(filterField))
             {
@@ -193,7 +193,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
             return await FindOne(Builders<T>.Filter.Eq(filterField, filterValue), projection);
         }
 
-        public async Task<T> FindOne(K _id, ProjectionDefinition<T>? projection = null)
+        public virtual async Task<T> FindOne(K _id, ProjectionDefinition<T>? projection = null)
         {
             if (_id == null)
             {
@@ -202,7 +202,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
             return await FindOne("_id", _id, projection);
         }
 
-        public async Task<List<T>> FindMany(FilterDefinition<T>? filter = null, ProjectionDefinition<T>? projection = null, SortDefinition<T>? sort = null, int limit = 0, int skip = 0)
+        public virtual async Task<List<T>> FindMany(FilterDefinition<T>? filter = null, ProjectionDefinition<T>? projection = null, SortDefinition<T>? sort = null, int limit = 0, int skip = 0)
         {
             filter ??= Builders<T>.Filter.Empty;
             IFindFluent<T, T> findFluent = Collection.Find(Session, filter);
@@ -230,7 +230,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
             return await findFluent.ToListAsync();
         }
 
-        public async Task<List<T>> FindMany(string filterField, object? filterValue, ProjectionDefinition<T>? projection = null, SortDefinition<T>? sort = null, int limit = 0, int skip = 0)
+        public virtual async Task<List<T>> FindMany(string filterField, object? filterValue, ProjectionDefinition<T>? projection = null, SortDefinition<T>? sort = null, int limit = 0, int skip = 0)
         {
             if (string.IsNullOrWhiteSpace(filterField))
             {
@@ -242,7 +242,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
         /*
          * Cursor
          */
-        public async Task<IAsyncCursor<T>> Cursor(FilterDefinition<T>? filter = null, ProjectionDefinition<T>? projection = null, SortDefinition<T>? sort = null, int limit = 0, int skip = 0, CancellationToken cancellationToken = default)
+        public virtual async Task<IAsyncCursor<T>> Cursor(FilterDefinition<T>? filter = null, ProjectionDefinition<T>? projection = null, SortDefinition<T>? sort = null, int limit = 0, int skip = 0, CancellationToken cancellationToken = default)
         {
             filter ??= Builders<T>.Filter.Empty;
             IFindFluent<T, T> findFluent = Collection.Find(Session, filter);
@@ -273,13 +273,13 @@ namespace Utils4Net.Database.MongoDB.Controllers
         /*
          * Count
          */
-        public async Task<long> Count(FilterDefinition<T>? filter = null)
+        public virtual async Task<long> Count(FilterDefinition<T>? filter = null)
         {
             filter ??= Builders<T>.Filter.Empty;
             return await Collection.CountDocumentsAsync(Session, filter);
         }
 
-        public async Task<long> Count(string filterField, object? filterValue)
+        public virtual async Task<long> Count(string filterField, object? filterValue)
         {
             if (string.IsNullOrWhiteSpace(filterField))
             {
@@ -291,12 +291,12 @@ namespace Utils4Net.Database.MongoDB.Controllers
         /*
          * Exists
          */
-        public async Task<bool> Exists(FilterDefinition<T>? filter = null)
+        public virtual async Task<bool> Exists(FilterDefinition<T>? filter = null)
         {
             return await Count(filter) > 0;
         }
 
-        public async Task<bool> Exists(string filterField, object? filterValue)
+        public virtual async Task<bool> Exists(string filterField, object? filterValue)
         {
             if (string.IsNullOrWhiteSpace(filterField))
             {
@@ -305,7 +305,7 @@ namespace Utils4Net.Database.MongoDB.Controllers
             return await Exists(Builders<T>.Filter.Eq(filterField, filterValue));
         }
 
-        public async Task<bool> Exists(K _id)
+        public virtual async Task<bool> Exists(K _id)
         {
             if (_id == null)
             {
